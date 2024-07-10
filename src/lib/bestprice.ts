@@ -1,6 +1,6 @@
 import { Types } from "../types/types";
 
-const pricePerCard = (cardCount: number) => {
+export const pricePerCard = (cardCount: number) => {
   if (cardCount >= 200) {
     return 0.75;
   } else if (cardCount >= 50) {
