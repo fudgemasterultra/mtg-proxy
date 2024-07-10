@@ -1,24 +1,31 @@
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-  if (msg.color) {
-    console.log("Receive color = " + msg.color);
-    document.body.style.backgroundColor = msg.color;
-    sendResponse("Change color to " + msg.color);
-  } else {
-    sendResponse("Color message is none.");
-  }
-});
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import { grabDecklist } from "./lib/parser";
+import { bestPrice } from "./lib/bestprice";
 
-const App: React.FC = () => {
-  return (
-    <div style={{ backgroundColor: 'white', padding: '100px' }}>
-      <h1>Hello from React Chrome Extension!</h1>
-    </div>
+const goldFishSite = window.location.href.startsWith(
+  "https://www.mtggoldfish.com/"
+);
+if (goldFishSite) {
+  const App: React.FC = () => {
+    const deckList = grabDecklist();
+    return (
+      <button
+        onClick={() => console.log(bestPrice(deckList))}
+        className="btn-type-menu btn-type-menu-paper nav-item active"
+      >
+        Proxy
+      </button>
+    );
+  };
+
+  const rootElement = document.createElement("div");
+  const ul = document.querySelector(
+    ".type-switcher-tabs.nav.nav-pills.deck-type-menu.additional-1"
   );
-};
+  if (ul) {
+    ul.appendChild(rootElement);
+  }
 
-const rootElement = document.createElement('div');
-document.body.appendChild(rootElement);
-
-ReactDOM.render(<App />, rootElement);
+  ReactDOM.render(<App />, rootElement);
+}
